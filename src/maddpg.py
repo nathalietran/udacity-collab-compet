@@ -67,12 +67,11 @@ class MADDPG():
             actions_next[:, idx, :] = agent_i.actor_target(states[:, idx])
         actions_next = actions_next.view(BATCH_SIZE, -1)
 
-        # state, action, reward, done of the corresponding agent
+        # state, reward, done of the corresponding agent
         # and reshape the reward and done objects to allow the computation
         agent_state = states[:, agent_id, :]
-        agent_action = actions[:, agent_id, :]
-        agent_reward = rewards[:, agent_id].view(-1,1)
-        agent_done = dones[:, agent_id].view(-1,1)
+        agent_reward = rewards[:, agent_id].view(-1, 1)
+        agent_done = dones[:, agent_id].view(-1, 1)
 
         # compute the actions vector to pass to the local critic in order
         # to update the actor. With N = 2:
@@ -85,7 +84,7 @@ class MADDPG():
 
         agent_experience = (full_states,
                             actions, actions_pred, actions_next,
-                            agent_state, agent_action, agent_reward, agent_done,
+                            agent_reward, agent_done,
                             next_states, next_full_states)
 
         agent.learn(agent_experience, GAMMA)

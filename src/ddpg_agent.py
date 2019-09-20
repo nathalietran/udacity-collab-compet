@@ -92,7 +92,7 @@ class Agent():
         """
         (full_states, actions,
              actions_pred, actions_next,
-             agent_state, agent_action, agent_reward, agent_done,
+             agent_reward, agent_done,
              next_states, next_full_states) = experiences
 
         # --------------------------- update critic ------------------------- #
