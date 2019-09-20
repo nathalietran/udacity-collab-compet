@@ -29,12 +29,8 @@ class MADDPG():
 
     def act(self, state, i_episode=0, add_noise=True):
         """Return an action for each agent"""
-        actions = []
-        for state, agent in zip(state, self.agents):
-            action = agent.act(state, i_episode, add_noise)
-            actions.append(np.reshape(action, -1))
-        actions = np.stack(actions)
-        return actions
+        return [np.reshape(agent.act(state, i_episode, add_noise), -1)
+                for state, agent in zip(state, self.agents)]
 
     def step(self, i_episode, state, action, reward, next_state, done):
         # flatten state and next_state to get
