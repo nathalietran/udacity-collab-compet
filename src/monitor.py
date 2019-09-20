@@ -3,7 +3,7 @@ import torch
 import numpy as np
 
 
-def maddpg_train(env, agent, n_episodes=3000, print_every=500):
+def run_agent(env, agent, n_episodes=3000, print_every=500):
     """Run the agents inside the environment.
 
     Params
