@@ -54,3 +54,5 @@ We can follow the trained agent for one episode here:
 ![](figures/tennis.gif)
 
 # Ideas for future works
+
+We can obviously observe that the there is a lot of instability during training. Fine tuning the hyper-parameters can help stabilize the training.  We can tune the learning rate for actor and critic as well as the batch size. As we did not use the Ornstein-Uhlenbeck (OU) process, we can further investigate the way the noise influences the training and tune the decay factor.
