@@ -51,10 +51,26 @@ def run_agent(env, agent, n_episodes=3000, print_every=500):
     return all_scores, rolling_mean
 
 
-def test_agent(env, agents, max_t=1000):
+def test_agent(env, agent, max_t=1000):
     """Test the trained agent
     Params
     ======
         max_t (int): maximum number of timesteps per episode
     """
-    raise NotImplementedError
+    brain_name = env.brain_names[0]
+
+    env_info = env.reset(train_mode=False)[brain_name]
+    states = env_info.vector_observations
+    scores = np.zeros(len(agent.agents))
+    for t in range(max_t):
+        actions = agent.act(states, add_noise=False)
+        env_info = env.step(actions)[brain_name]
+        next_states = env_info.vector_observations
+        rewards = env_info.rewards
+        dones = env_info.local_done
+        scores += env_info.rewards
+        states = next_states
+        if np.any(dones):
+            break
+    print('Total score (max of the two agents) this episode: {}'
+          .format(np.max(scores)))
