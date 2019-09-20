@@ -27,7 +27,7 @@ class MADDPG():
         # Replay memory
         self.memory = ReplayBuffer(BUFFER_SIZE, BATCH_SIZE, random_seed)
 
-    def act(self, state, i_episode, add_noise=True):
+    def act(self, state, i_episode=0, add_noise=True):
         """Return an action for each agent"""
         actions = []
         for state, agent in zip(state, self.agents):
@@ -92,9 +92,9 @@ class MADDPG():
     def save(self):
         for idx, agent in enumerate(self.agents):
             torch.save(agent.actor_local.state_dict(),
-                       f'weights/checkpoint_agent{idx}_actor.pth')
+                       f'weights/checkpoint_actor_{idx}.pth')
             torch.save(agent.critic_local.state_dict(),
-                       f'weights/checkpoint_critic{idx}_critic.pth')
+                       f'weights/checkpoint_critic_{idx}.pth')
 
 
 class ReplayBuffer(object):
