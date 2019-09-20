@@ -92,10 +92,10 @@ class MADDPG():
 
     def save(self):
         for idx, agent in enumerate(self.agents):
-            chk_actor_filename = 'checkpoint_agent{}_actor.pth'.format(idx)
-            chk_critic_filename = 'checkpoint_critic{}_critic.pth'.format(idx)
-            torch.save(agent.actor_local.state_dict(), chk_actor_filename)
-            torch.save(agent.critic_local.state_dict(), chk_critic_filename)
+            torch.save(agent.actor_local.state_dict(),
+                       f'weights/checkpoint_agent{idx}_actor.pth')
+            torch.save(agent.critic_local.state_dict(),
+                       f'weights/checkpoint_critic{idx}_critic.pth')
 
 
 class ReplayBuffer(object):
