@@ -31,9 +31,9 @@ def run_agent(env, agent, n_episodes=3000, print_every=500):
                 break
 
         score_max = np.max(scores)
-        scores_deque.append(score_max)
         score_mean = np.mean(scores_deque)
 
+        scores_deque.append(score_max)
         all_scores.append(score_max)
         rolling_mean.append(score_mean)
 
