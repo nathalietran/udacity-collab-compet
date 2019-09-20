@@ -3,54 +3,52 @@ import torch
 import numpy as np
 
 
-def run_agent(env, agents, n_episodes=1000, print_every=100, max_t=1000):
+def maddpg_train(env, agent, n_episodes=3000, print_every=500):
     """Run the agents inside the environment.
-    
+
     Params
     ======
         n_episodes (int): maximum number of training episodes
-        max_t (int): maximum number of timesteps per episode
     """
-    scores_deque = deque(maxlen=print_every)
-    scores = []
+    scores_deque = deque(maxlen=100)
+    all_scores = []
+    rolling_mean = []
+
     for i_episode in range(1, n_episodes + 1):
         env_info = env.reset(train_mode=True)[brain_name]
-        states = np.reshape(env_info.vector_observations,
-                            (1, agents.nb_agents * state_size))
-        agents.reset()
-        score = np.zeros(agents.nb_agents)
-        for t in range(max_t):
-            actions = agents.act(states, add_noise=True)
-            env_info = env.step(actions)[brain_name]
-            next_states = np.reshape(env_info.vector_observations,
-                                     (1, agents.nb_agents * state_size))
-            rewards = env_info.rewards
-            dones = env_info.local_done
-            agents.step(states, actions, rewards, next_states, dones)
-            score += rewards
-            states = next_states
-            if np.any(dones):
+        state = env_info.vector_observations
+        scores = np.zeros(len(agent.agents))
+        while True:
+            action = agent.act(state, i_episode, add_noise=True)
+            env_info = env.step(action)[brain_name]
+            next_state = env_info.vector_observations
+            reward = env_info.rewards
+            done = env_info.local_done
+            agent.step(i_episode, state, action, reward, next_state, done)
+            scores += reward
+            state = next_state
+            if np.any(done):
                 break
 
-        scores_deque.append(np.max(score))
-        scores.append(np.max(score))
+        score_max = np.max(scores)
+        scores_deque.append(score_max)
+        score_mean = np.mean(scores_deque)
 
-        print('\rEpisode {}\tAverage Score: {:.4f}'
-              .format(i_episode, np.mean(scores_deque)), end="")
-        if i_episode % print_every == 0:
-            print('\rEpisode {}\tAverage Score: {:.4f}'
-                  .format(i_episode, np.mean(scores_deque)))
-        if np.mean(scores_deque) >= 0.5:
-            print('\nEnvironment solved in {:d} episodes!'
-                  '\tAverage Score: {:.2f}'
-                  .format(i_episode - print_every, np.mean(scores_deque)))
-            torch.save(agent.actor_local.state_dict(),
-                       'weights/checkpoint_actor.pth')
-            torch.save(agent.critic_local.state_dict(),
-                       'weights/checkpoint_critic.pth')
+        all_scores.append(score_max)
+        rolling_mean.append(score_mean)
+
+        print('\r{} episode\tavg score {:.5f}\tmax score {:.5f}'
+              .format(i_episode, score_mean, score_max), end='')
+        if score_mean >= 0.5:
+            print('\nEnvironment solved after {} episodes with the '
+                  'average score {}\n'.format(i_episode, score_mean))
+            agent.save()
             break
 
-    return scores
+        if i_episode % print_every == 0:
+            print()
+
+    return all_scores, rolling_mean
 
 
 def test_agent(env, agents, max_t=1000):
