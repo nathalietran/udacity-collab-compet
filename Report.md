@@ -39,5 +39,15 @@ The optimization employed to train the
 network is Adam with a learning rate set to `LR = 0.0001` and a weight decay set to `WEIGHT_DECAY = 0` (and other default parameters from PyTorch library) for both the actor and critic networks.
 
 # Plot of Rewards
+The environment has been solve in around 1400 episodes ! Below is the plot of the agent's rewards.
+
+```
+500 episode	 avg score 0.0211	max score 0.0000
+1000 episode	avg score 0.0348	max score 0.1000
+1367 episode	avg score 0.5028	max score 0.2000
+Environment solved after 1367 episodes with the average score 0.5028
+```
+
+![](figures/scores.png)
 
 # Ideas for future works
