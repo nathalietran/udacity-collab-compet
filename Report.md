@@ -50,4 +50,7 @@ Environment solved after 1367 episodes with the average score 0.5028
 
 ![](figures/scores.png)
 
+We can follow the trained agent for one episode here:
+![](figures/tennis.gif)
+
 # Ideas for future works
